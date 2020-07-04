@@ -20,8 +20,14 @@ document.addEventListener('DOMContentLoaded', () => {
       this.length = 10000;
     }
 
-    init() {
+    async init() {
       const gameContainer = document.querySelector('.game-container');
+
+      let data = await this.getData('./db/test.json');
+
+      data.forEach((item) => {
+        this.obstacles.push(new Obstacle(item.x, item.height, item.rotated));
+      });
 
       document.addEventListener('keydown', (event) => {
         if (event.code === 'Space') {
@@ -34,6 +40,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }
+
+    async getData(url) {
+  
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error (`Ошибка по адресу ${url}, статус ошибки ${response.status}!`);
+      }
+    
+      return await response.json();
+    
+    };
+    
 
     animateGame() {
       this.scrollLeftOffset += 10;
