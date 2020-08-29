@@ -2,10 +2,10 @@
 
 class Obstacle {
   constructor(x, height, rotated, width) {
-    this.x = x;
-    this.height = height;
+    this.x = +x;
+    this.height = +height;
     this.rotated = rotated;
-    this.width = width;
+    this.width = +width;
     this.y = this.rotated !== "false" ? 0 : window.innerHeight - +this.height - 77;
   }
 }
@@ -89,15 +89,18 @@ document.addEventListener('DOMContentLoaded', () => {
       screenContainer.scrollLeft = this.scrollLeftOffset;
       playerDiv.style.left = `${this.scrollLeftOffset}px`;
 
-      this.player.x = this.scrollLeftOffset; 
+      this.player.x = this.scrollLeftOffset + this.player.width; 
 
       const filteredArray = this.obstacles.filter((item) => +item.x 
       + +item.width> this.player.x + this.player.width);
 
       let collision = false;
-      filteredArray.forEach((item) => {
-        collision = this.isCollide(item, this.player)
-      });
+      for (let item of filteredArray) {
+        if (this.isCollide(item, this.player)) {
+          collision = true;
+          break;
+        }
+      }
 
       if (collision) {
         console.log("БУХ!");
